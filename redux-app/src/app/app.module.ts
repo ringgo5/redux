@@ -6,13 +6,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store'; //IMPORTANTE SI IMPORTAMOS AQUI, IMPORTARLO ABAJO EN IMPORTS.
 
 
-import { contadorReducer } from './contador/contador.reducer';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HijoComponent } from './contador/hijo/hijo.component';
 import { NietoComponent } from './contador/nieto/nieto.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { contadorReducer } from './contador/contador.reducer';
 
 @NgModule({
   declarations: [

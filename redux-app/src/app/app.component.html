@@ -21,22 +21,23 @@
     <div class="col">
       <button (click)="incrementar()" class="btn btn-primary">Incrementar</button>
       <button (click)="decrementar()" class="btn btn-info" >Decrementar</button>
+      <button (click)="resetear()" class="btn btn-info" >resetear</button>
     </div>
     <h2>{{contador}}</h2>
   </div>
   <hr>
-  <!--
+  
   <div class="row text-center">
     <div class="col">
-      <app-hijo [contador]="contador" (cambioContador)="contador=$event"></app-hijo>
+      <app-hijo ></app-hijo> <!--Antes tenía esto dentro de <app-hijo ![contador]="contador" (cambioContador)="contador=$event"> Pero ahora una vez ya tenemos REDUX lo ponemos asi-->
     </div>
 
   </div>
-  -->
+  
 </body>
 <div>Con [contador] me lo traigo del padre y con (cambioContador) lo envio. Ojo llaves y parentesis. QUe ponga $event,
   es para indicar
-  que es lo que enviemos
+  que es lo que enviemos(esto cuando tenia "app-hijo ![contador]="contador" (cambioContador)="contador=$event">)
   <h2>{{contador}}</h2>
 </div>
 
