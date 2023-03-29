@@ -1,0 +1,112 @@
+REDUX---)patron para el manejo de la información
+Este patrón nos ayudará a saber :
+    ¿Cuá es el estado de la aplicación?
+    ¿Cómo se encuentra determinada variable?
+    ¿Quien cambio esa variable?¿En qué momento?
+
+IDEAS PRINCIPALES REDUX:(STORE,STATE,REDUCER)
+
+Toda la data se encuentra en una estrucura DEFINIDA
+Toda la informaciónse encontrará almacenada en un mismo lugar---STORE (contiene toda o el 99% de la informaciónde la aplicación)
+NUNCA MODIFICAMOS el STORE de forma directa---)NUNCA.
+Todas las interacciones de usuario y/o código dispara acciones que describen qué sucedió
+El valor actual de la información de la aplicación se llama estado --STATE
+UN nuevo estado es creado en base a la combinación del viejo estado y la de una acción por función llamada REDUCER
+
+NEcesitaremos Chrome, node js, postman y angular CLi
+
+Para instalar angular---) npm install -g @angular/CLi
+ng new nombreProyecto
+cd nombreProyecto
+ng serve
+---------------------------
+IMPORTANTE EN REDUX:
+
+acciones:
+    Es la única fuente de información que se envía por interaccionesde usuario o programa
+    Sólo tiene 2 propiedades:
+        type:  que es lo que queremos ahcer o o cual es la accion que queremos realizar(siempre hay que mandarlo)
+        payload:(es opcional, es la menos cantidad de informacion posible para realizar la tarea)
+
+reducer:
+    Simple funcion que recibe 2 argumentos. Siempre debe retornar una ESTATE
+        OLDSTATE---) estado actual de la aplicación
+        STATE---)objeto plano que indica que hay que hacer
+
+-------------------------------
+ejemplo sencillo:
+
+    estado actual                                   
+{
+    visibility: "mostrar_todos",
+    todos:[
+        {
+            text:'salvar al mundo',
+            compelted:true,
+        },
+        {
+            text:'vencer a thanos',
+            completed:false
+        }
+    ]
+}
+
+
+action---) {
+    type: COMPLETAR_TAREA,
+    index:1
+}
+
+el NUEVO ESTADO:
+{
+    visibility: "mostrar_todos",
+    todos:[
+        {
+            text:'salvar al mundo',
+            compelted:true,
+        },
+        {
+            text:'vencer a thanos',
+            completed:true
+        }
+    ]
+}
+
+------------------------------------------
+state--) Sólo lectura, nunca mutará el state de forma directa.
+    Hay funciones privadas: push y manipulación directa del OLDSTATE
+
+store--)Contiene el estado de la aplicación,permite la lectura del estado via:---)     getState()
+        Permite crear una nuevo estado utilizando:---)    dispatch(ACTION)
+        Permite noticificar cambios de estado via:--->   subscribe()
+
+
+-----------------------------
+CREACIÓN PROYECTO:  
+
+Creamos una carpeta(redx-basic) y ponemos npm init, aceptamos todos hasta que se cree el package.json
+Debemos instalar typescript.(npm install -g ts-node(esto es de nmanera global) y npm install -g typescript si no tenemos derechos para hacerlo asi podemos hacerlo de forma local:
+    npm install ts-node --save-dev(con esto no necesitamos privilegios de administrador))
+    y lo mismo para typescript--)npm install typescript --save-dev
+
+(para correr podemos usar ts-node (nombre archivo).Como hicimos en el curso con prueba-ts)
+(lo tendremos correcto cuando podamos ver hola mundo de prueba-ts.ts por la consola)
+
+
+Instalar----) npm i redux.   En este punto ya tenemos casi ordenado el proyecto, con contador.actions.ts /contador.reducer.ts creados
+
+Ahora crearemos un proyecto angular, para pasarlo a redux. Creamos una carpeta y en el terminal ng new nombre
+Instalamos bootsrap si no lo tenemos npm install bootstrap
+Para instalar NGRX, vamos a su pagian principal,getting started. Lo instalamos : npm install @ngrx/store --save
+Seguimos las intrucciones que nos dice la web sobre crear contador.actions.ts y todo esto. ojo al instalar los tools. Cerramos el server, instalamos con ng add @ngrx/store-devtools@latest
+Una vez instalado el tool, cuando en inspeccionar vemos cada vez que hemos apretado una funcion,si nos descargamos el archivo,nosdara el estado de la aplicacion en ese momento. Nos dara un
+archivo .json
+Para crear una accion(multiplicar)
+Creamos la accion en contador.actions
+Creamos la accion en .component.ts (nieto.component.ts, hijo.component.ts)
+Añadimos la accion en el reducer(contador.reducer.ts)
+No olvidar subscribe dentro de para que se actualice.
+        ngOnInit() { 
+            this.store.select('contador')
+                .subscribe(contador=>this.contador=contador);
+        }

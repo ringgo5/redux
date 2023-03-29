@@ -1,0 +1,109 @@
+Snippers-) acts,
+
+
+Para crear el poyecto, ng init nombre.
+borramos el HTML y copiamos lo del curso, una vez hecho creamos una carpeta llamada todos(dentro de app).
+Creamos componentes. Nos vamos a todos y ponemos ng g m todos/todo --flat    (lo creamos en todos,llamado todo y --flat para que se quede ahi,en esa direccion)
+Se creara un todo.nodule.ts
+En app.module.ts, debemos importar dicho todo creado,tanto arriba como en medio.
+creamos los otros modulos:
+ ng g c footer --skipTests  (c de component)
+ Ahora crearemos los diferentes todos dentro de la carpeta todo(todo lo relacionado con los todos)
+  ng g c todos/todo-add (para la parte de arriba de añadir)
+  ng g c todos/todo-footer(sera para los botones que hay debajo del cuerpo)
+  ng g c todos/todo-item
+  ng g c todos/todo-list (nos agrupara todos los item)
+  Por ultimo creamos el componente principal:
+    El controlador:
+    ng g c todos/todo-page
+
+Cogemos todo el html y lo pasamos a otra pagina. vamos a colocar cada cosa en su sitio.
+Empezamos con footer. Copiamos la parte del html del footer y la pegamos en footer.component.html
+para sacar modulos y que se vea fuera debemos exportarlos en su correspondiente ts. para usar por ejemplo el todopagecomponent, debemos exportarlo en
+todo.module.ts
+Es decir, como estamos poniendo el modulo de todo-page-component en app.component.html, debemos exportarlo de su lugar. Exportarlo en su contralador
+que en este caso es el todo.module.ts Como hemos puesto todo el html dentro de todo-page-component(recuerda que dividimos el html en dos partes,footer y todo lo demas 
+lo pusimos en todo-page) no hace falta exportar ninguno más. Si lo hubieramos dividido mas(el html) habría que exportar lo que quedase
+
+Si nos fijamos, vemos que la parte del header, es la que corresponderia a todo-add, entonces borramos ese html, y lo cpiamos en el html de todo-add. Susdtituyendolo por el
+nombre del componente de todo-add(<app-todo-add>)
+
+Ahora creamos una carpeta llamada models,dentro creamos un archivo llamado todo.model.ts y dentro creamos la clase todo con sus propiedades(las que necesitemos)
+Implementamos NGRX
+npm install @ngrx/store --save
+Creamos todo-actions dentro de la carpeta todos
+Vamos a exportar el modulo del store. Vamos al app.module.ts. Y hacemos lo de la gui,a lo importamos arriba y en el medio(como lo pone la guia)
+Ahora instalamos las devtools --- npm install @ngrx/store-devtools --save  y seguimos las intrucciones de la guia
+Toca definir appState. Creamos un archivo llamado app.reducer.ts(el reducer general)
+Agregar un todo(con formularios):
+El lo hace con ReactiveFormsModule(lo importa primero en app.module). Lo importamos en app.module.ts y en todo.module.ts, para que llegue a los todos
+Nos fijamos donde escribimos para añadir el todo, con lo que nos vamos al html de todo-add y abrimos su component.ts:
+    añadimos un formcontrol  txtinput: FormControl
+    constructor(){
+        this.txtinput = new FormControl('Hola', Validators.required);//añadimos esto a la caja de texto que sera donde vayamos añadiendo todos
+      }
+    
+        ngOnInit(): void {
+            
+        }
+        Ahora añadimos ese txtinput a la caja de texto donde iremos añadiendo los todos:
+        [formControl]="txtinput" (esto se lo añadimos como atributo, alado de class)
+        para añadir la accion,añadimos abajo de formControl la accion:
+            (keyup.enter)="agregar()" ---) cuando apretemos enter hacemos la funcion agregar.
+
+        Añadimos el Store como siempre,dentro del constructor
+
+Listar todos:
+ ¿ Donde vamos a listarlo?? en todo-list. No añadimos ninguna acción puesto que queremos listar los todos conforme los añadamos.
+ Creamos la clase en todo-list.component.ts, con un suscribe. ponemos un select('todos')para especificar que solo trabajamos con eso
+ Luego añadimos la lista en el html con un ngfor dentro de la etiqueta
+
+Controlar los todo:
+En este caso queremos enviar el todo,con lo uqe dentro de la etiqueta de app-todo-item ponemos:
+        *ngfor="let todo of todos"
+        [todo]="todo" --) esta linea la añadimos. Seguidamente hacemos input en todo-item.component.ts para recibir el todo
+        Añadimos dos propiedades al todo-item component el chkcompletado y el input. EL primero será el que controle el click verde y el segundo el todo
+        Ahora vamos a establecer el foco cuando hagamos click(así cada vez que hacemos click,se pone editar solo ese input, y cuando hago click a otro, el primero se va)
+        Ponemos una referencia algo como #inputfisico ( se le llama referencia local en angular), 
+        Ahora en el componente usamos el VewChild:
+            @ViewChild('inputFisico') txtInputFisico!: ElementRef;   ---) hacemos view al inputfisico creado como referencia local
+        Ahora en vez de poner dblclick=editando, creamos un metodo llamado editar
+        Para quitar  el foco cuando apretemos otro input---) blur (lo añadimos en el html y ponemos un metodo). con un simple metodo que diga:
+          this.editando=false;
+        Vamos a controlar el check(boton) para ellonos suscribrimoscon el chkcompletado
+        Como es una accion,creamos la accion en todo.actions
+
+Editar una tarea por hacer:
+        Creamos la accion editar en todo.action
+        La accion editar, la activaremos cuando acabamoe la edicion(terminarEdicion()). Realmente la accion editar es actualizar el antiguo texto
+        con el nuevo introducido
+        Si nos fijamos hemos puesto varias cosas. Dos validaciones, una de ellas indica que si no metemos ningun dato(borramos y salimos de la edicion)
+        devuelve el texto que había. Otra importante es que cuando abrimos la edicion, seguimos viendo la infomacion, esto lo hacemos desde el metodo editar de todo-item-component
+
+Borrar una tarea de una lista:
+
+        1)Creamos la accion en todo.actions
+        2)La implementamos en el reducer. Usamos el filter:
+        on(actions.borrar,(state, {id})=> state.filter(todo=>todo.id !==id))  //decimos, regresa todos los todos donde el id sea distinto al id seleccionado
+        3)Nos vamos al html, ponemos borrar y creamos su método en el todo-item-component
+
+Marcar/desmarcar todos los todos:
+
+        Hay en la derecha de donde añadimos todos, un boton. Queremos que cuando lo apretemos ,se marquen todos
+        Creamos la accion, la metemos en el reducer(recordad que en el redcucer solo ponemos los elementos que vamos a querer y enviar. no la logica)
+        Introducimos el metodo en el html
+        Creamos el metodo en el componente(aqui si ponemos la logica, aqui cambiamos el completado,en el reducer solo le decimos que de todo, queremos el completado,aqui lo cambiamos)
+Creamos nuevo Reducer para el filtro. El filtro es lo que nos dira en que boton de los de abajo estamos(todas,activos,completados)
+He creado 2 snippers, reduc y acts. Uno para importar en actions y otro en reducer.
+Creamos en el reducer los dos importes, creamos la funcion de estado inicial la constante de reducer __ y abajo exportamos la misma:
+
+            const _filtroReducer = createReducer(estadoInicial,
+              on(actions.setFiltro, (state, { filtro }) => estadoInicial),
+            )
+
+
+
+
+            export function filtroReducer(state: any, action: any) {
+              return _filtroReducer(state, action);
+            }
